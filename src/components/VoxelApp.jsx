@@ -123,32 +123,64 @@ const VoxelApp = () => {
         return Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2) + (p1.z && p2.z ? Math.pow(p1.z - p2.z, 2) : 0));
     };
 
-    const drawHUDCircle = (ctx, x, y, progress, color) => {
-        // Background Ring
-        ctx.beginPath();
-        ctx.arc(x, y, 35, 0, Math.PI * 2);
-        ctx.strokeStyle = "rgba(255, 255, 255, 0.2)";
-        ctx.lineWidth = 4;
+    const drawHUDVoxel = (ctx, x, y, progress, color) => {
+        const size = 30;
+        const h = size * Math.sin(Math.PI / 3);
+        const yOffset = size / 2;
+
+        // Helper to draw hexagon path
+        const drawHex = () => {
+            ctx.beginPath();
+            for (let i = 0; i < 6; i++) {
+                const angle = Math.PI / 3 * i - Math.PI / 6;
+                const px = x + size * Math.cos(angle);
+                const py = y + size * Math.sin(angle);
+                if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+            }
+            ctx.closePath();
+        };
+
+        // 1. Draw Wireframe Background
+        drawHex();
+        ctx.strokeStyle = "rgba(255, 255, 255, 0.25)";
+        ctx.lineWidth = 3;
+        ctx.lineJoin = "round";
         ctx.stroke();
 
-        // Progress Ring
-        ctx.shadowBlur = 15;
-        ctx.shadowColor = color;
+        // Inner Y lines for cube look
         ctx.beginPath();
-        ctx.arc(x, y, 35, -Math.PI / 2, (-Math.PI / 2) + (Math.PI * 2 * progress));
-        ctx.strokeStyle = color;
-        ctx.lineWidth = 4;
-        ctx.lineCap = "round";
-        ctx.stroke();
+        ctx.moveTo(x, y); ctx.lineTo(x, y - size); // Top vertical (actually flat top in this orientation usually requires angles, let's just do a Y)
+        // Correct Isometric Y: Center to Top-Left, Center to Top-Right, Center to Bottom
+        // Let's stick to a simple outer Hex for the "fill" container to be clean.
 
-        // Center Dot
-        ctx.beginPath();
-        ctx.arc(x, y, 4, 0, Math.PI * 2);
+        // 2. Draw Fill
+        ctx.save();
+        drawHex();
+        ctx.clip(); // Clip to hexagon
+
+        const fillHeight = (size * 2) * progress;
         ctx.fillStyle = color;
-        ctx.fill();
+        ctx.globalAlpha = 0.6;
+        ctx.fillRect(x - size, y + size - fillHeight, size * 2, fillHeight);
+        ctx.restore();
 
-        // Reset Shadow for other elements
-        ctx.shadowBlur = 0;
+        // 3. Draw Wireframe Outline (Top Layer)
+        drawHex();
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        // 4. Glow
+        if (progress > 0) {
+            ctx.save();
+            drawHex();
+            ctx.shadowBlur = 20;
+            ctx.shadowColor = color;
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 1;
+            ctx.stroke();
+            ctx.restore();
+        }
     };
 
     const drawCyberHand = (ctx, landmarks, label) => {
@@ -273,7 +305,7 @@ const VoxelApp = () => {
                 s.rotateTimer = 0;
                 if (s.resetTimer < RESET_HOLD) {
                     s.resetTimer += 16;
-                    drawHUDCircle(bioCtx, bioCanvas.width / 2, bioCanvas.height / 2, s.resetTimer / RESET_HOLD, "#fca5a5");
+                    drawHUDVoxel(bioCtx, bioCanvas.width / 2, bioCanvas.height / 2, s.resetTimer / RESET_HOLD, "#fca5a5");
                     if (modeRef.current) modeRef.current.innerText = "Resetting...";
                 } else {
                     voxelGroup.position.set(0, 0, 0);
@@ -289,7 +321,7 @@ const VoxelApp = () => {
             if (lPalm && rPalm) {
                 if (s.rotateTimer < ROTATE_HOLD) {
                     s.rotateTimer += 16;
-                    drawHUDCircle(bioCtx, bioCanvas.width / 2, bioCanvas.height / 2, s.rotateTimer / ROTATE_HOLD, "#5eead4");
+                    drawHUDVoxel(bioCtx, bioCanvas.width / 2, bioCanvas.height / 2, s.rotateTimer / ROTATE_HOLD, "#5eead4");
                     if (modeRef.current) modeRef.current.innerText = "Enabling Rotate...";
                 } else {
                     if (modeRef.current) modeRef.current.innerText = "Rotating Model";
@@ -316,7 +348,7 @@ const VoxelApp = () => {
             if (isFist) {
                 if (s.grabTimer < GRAB_HOLD) {
                     s.grabTimer += 16;
-                    drawHUDCircle(bioCtx, lHand[0].x * bioCanvas.width, lHand[0].y * bioCanvas.height, s.grabTimer / GRAB_HOLD, "#fbbf24");
+                    drawHUDVoxel(bioCtx, lHand[0].x * bioCanvas.width, lHand[0].y * bioCanvas.height, s.grabTimer / GRAB_HOLD, "#fbbf24");
                 } else {
                     if (!s.isGrabbing) { s.grabOffset.copy(voxelGroup.position).sub(handWorldPos); s.isGrabbing = true; }
                     voxelGroup.position.copy(handWorldPos).add(s.grabOffset);
@@ -347,7 +379,7 @@ const VoxelApp = () => {
                 s.buildTimer = 0;
                 if (s.eraseTimer < INTENT_HOLD) {
                     s.eraseTimer += 16;
-                    drawHUDCircle(bioCtx, px, py, s.eraseTimer / INTENT_HOLD, "#fca5a5");
+                    drawHUDVoxel(bioCtx, px, py, s.eraseTimer / INTENT_HOLD, "#fca5a5");
                     if (modeRef.current) modeRef.current.innerText = "Locking Eraser...";
                 } else {
                     s.isErasing = true;
@@ -365,7 +397,7 @@ const VoxelApp = () => {
                 s.eraseTimer = 0;
                 if (s.buildTimer < INTENT_HOLD) {
                     s.buildTimer += 16;
-                    drawHUDCircle(bioCtx, px, py, s.buildTimer / INTENT_HOLD, "#5eead4");
+                    drawHUDVoxel(bioCtx, px, py, s.buildTimer / INTENT_HOLD, "#5eead4");
                     if (modeRef.current) modeRef.current.innerText = "Syncing Build...";
                 } else {
                     if (!s.isBuilding) {
