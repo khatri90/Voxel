@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { Hands } from '@mediapipe/hands';
 import { Camera } from '@mediapipe/camera_utils';
 import * as THREE from 'three';
-import { IconBuild, IconErase, IconGrab, IconReset, IconRotate, IconPeace } from './UI/Icons';
+import { IconGestureBuild, IconGestureErase, IconGestureGrab, IconGestureReset, IconGestureRotate, IconGestureCycle } from './UI/Icons';
 import LoadingScreen from './UI/LoadingScreen';
 
 const VOXEL_PALETTE = [
@@ -555,48 +555,48 @@ const VoxelApp = () => {
                     </h3>
                     <ul className="space-y-2 text-sm text-slate-600">
                         <li className="flex items-center gap-3 p-1 rounded hover:bg-slate-50/50">
-                            <span className="w-8 h-8 rounded flex items-center justify-center bg-indigo-100 text-indigo-600 shadow-sm">
-                                <IconBuild className="w-5 h-5" />
+                            <span className="w-10 h-10 rounded flex items-center justify-center bg-indigo-100 text-indigo-600 shadow-sm shrink-0">
+                                <IconGestureBuild className="w-7 h-7" />
                             </span>
                             <div className="flex flex-col leading-tight">
                                 <strong className="text-indigo-600">Build</strong>
-                                <span className="text-xs text-slate-400">Pinch Right Hand</span>
+                                <span className="text-xs text-slate-400">Pinch <strong>Left</strong> Hand</span>
                             </div>
                         </li>
                         <li className="flex items-center gap-3 p-1 rounded hover:bg-slate-50/50">
-                            <span className="w-8 h-8 rounded flex items-center justify-center bg-rose-100 text-rose-500 shadow-sm">
-                                <IconErase className="w-5 h-5" />
+                            <span className="w-10 h-10 rounded flex items-center justify-center bg-rose-100 text-rose-500 shadow-sm shrink-0">
+                                <IconGestureErase className="w-7 h-7" />
                             </span>
                             <div className="flex flex-col leading-tight">
                                 <strong className="text-rose-500">Erase</strong>
-                                <span className="text-xs text-slate-400">Pinch Left + Point Right</span>
+                                <span className="text-xs text-slate-400">Pinch <strong>Right</strong> + Point <strong>Left</strong></span>
                             </div>
                         </li>
                         <li className="flex items-center gap-3 p-1 rounded hover:bg-slate-50/50">
-                            <span className="w-8 h-8 rounded flex items-center justify-center bg-amber-100 text-amber-600 shadow-sm">
-                                <IconGrab className="w-5 h-5" />
+                            <span className="w-10 h-10 rounded flex items-center justify-center bg-amber-100 text-amber-600 shadow-sm shrink-0">
+                                <IconGestureGrab className="w-7 h-7" />
                             </span>
                             <div className="flex flex-col leading-tight">
                                 <strong className="text-amber-600">Grab & Move</strong>
-                                <span className="text-xs text-slate-400">Hold Left Fist</span>
+                                <span className="text-xs text-slate-400">Hold <strong>Right</strong> Fist</span>
                             </div>
                         </li>
                         <li className="flex items-center gap-3 p-1 rounded hover:bg-slate-50/50">
-                            <span className="w-8 h-8 rounded flex items-center justify-center bg-fuchsia-100 text-fuchsia-600 shadow-sm">
-                                <IconPeace className="w-5 h-5" />
+                            <span className="w-10 h-10 rounded flex items-center justify-center bg-fuchsia-100 text-fuchsia-600 shadow-sm shrink-0">
+                                <IconGestureCycle className="w-7 h-7" />
                             </span>
                             <div className="flex flex-col leading-tight">
                                 <strong className="text-fuchsia-600">Cycle Color</strong>
-                                <span className="text-xs text-slate-400">Peace Sign (One Hand)</span>
+                                <span className="text-xs text-slate-400">Peace Sign (Any Hand)</span>
                             </div>
                         </li>
                         <li className="flex items-center gap-3 p-1 rounded hover:bg-slate-50/50 mt-2 border-t border-slate-100 pt-2">
-                            <div className="flex gap-1.5">
-                                <span className="w-7 h-7 rounded flex items-center justify-center bg-slate-100 text-slate-500">
-                                    <IconReset className="w-4 h-4" />
+                            <div className="flex gap-2 shrink-0">
+                                <span className="w-8 h-8 rounded flex items-center justify-center bg-slate-100 text-slate-500">
+                                    <IconGestureReset className="w-5 h-5" />
                                 </span>
-                                <span className="w-7 h-7 rounded flex items-center justify-center bg-slate-100 text-slate-500">
-                                    <IconRotate className="w-4 h-4" />
+                                <span className="w-8 h-8 rounded flex items-center justify-center bg-slate-100 text-slate-500">
+                                    <IconGestureRotate className="w-5 h-5" />
                                 </span>
                             </div>
                             <div className="flex flex-col leading-tight">
