@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { Hands } from '@mediapipe/hands';
 import { Camera } from '@mediapipe/camera_utils';
 import * as THREE from 'three';
+import { IconBuild, IconErase, IconGrab, IconReset, IconRotate, IconHandRight, IconHandLeft } from './UI/Icons';
 
 const VoxelApp = () => {
     const videoRef = useRef(null);
@@ -392,7 +393,7 @@ const VoxelApp = () => {
                     <div className="glass-panel p-6 flex flex-col gap-2 min-w-[200px] animate-fade-in">
                         <div className="flex items-center gap-2 mb-2">
                             <div className="w-3 h-3 rounded-full bg-indigo-400 animate-pulse"></div>
-                            <h1 className="text-xl font-bold tracking-tight text-slate-700">VOXEL ARCHITECT</h1>
+                            <h1 className="text-xl font-bold tracking-tight text-slate-700">VOXEL SCULPT</h1>
                         </div>
 
                         <div className="space-y-1">
@@ -417,19 +418,33 @@ const VoxelApp = () => {
                     <h3 className="font-bold text-slate-700 mb-4 border-b border-slate-200 pb-2">GESTURE GUIDE</h3>
                     <ul className="space-y-3 text-sm text-slate-600">
                         <li className="flex items-center gap-3">
-                            <span className="w-6 h-6 rounded flex items-center justify-center bg-indigo-100 text-indigo-600 text-xs font-bold">R</span>
+                            <span className="w-8 h-8 rounded flex items-center justify-center bg-indigo-100 text-indigo-600">
+                                <IconBuild className="w-5 h-5" />
+                            </span>
                             <span>Pinch Right to <strong className="text-indigo-500">Build</strong></span>
                         </li>
                         <li className="flex items-center gap-3">
-                            <span className="w-6 h-6 rounded flex items-center justify-center bg-rose-100 text-rose-500 text-xs font-bold">L</span>
+                            <span className="w-8 h-8 rounded flex items-center justify-center bg-rose-100 text-rose-500">
+                                <IconErase className="w-5 h-5" />
+                            </span>
                             <span>Pinch Left + Point Right to <strong className="text-rose-500">Erase</strong></span>
                         </li>
                         <li className="flex items-center gap-3">
-                            <span className="w-6 h-6 rounded flex items-center justify-center bg-amber-100 text-amber-600 text-xs font-bold">✊</span>
+                            <span className="w-8 h-8 rounded flex items-center justify-center bg-amber-100 text-amber-600">
+                                <IconGrab className="w-5 h-5" />
+                            </span>
                             <span>Hold Left Fist to <strong className="text-amber-600">Grab & Move</strong></span>
                         </li>
                         <li className="flex items-center gap-3">
-                            <span className="text-slate-400 text-xs">Reset: Hold Both Fists | Rotate: Hold Both Palms</span>
+                            <div className="flex gap-2">
+                                <span className="w-6 h-6 rounded flex items-center justify-center bg-slate-100 text-slate-500">
+                                    <IconReset className="w-4 h-4" />
+                                </span>
+                                <span className="w-6 h-6 rounded flex items-center justify-center bg-slate-100 text-slate-500">
+                                    <IconRotate className="w-4 h-4" />
+                                </span>
+                            </div>
+                            <span className="text-slate-400 text-xs">Reset (Fists) | Rotate (Palms)</span>
                         </li>
                     </ul>
                 </div>
