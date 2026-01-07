@@ -571,16 +571,4 @@ The architecture is extensible for future ML enhancements, including custom gest
 
 This project is available for academic and educational purposes. For commercial use, please contact the author.
 
-## Author
 
-Developed as part of graduate application portfolio demonstrating expertise in:
-- Machine Learning & Computer Vision
-- Real-time Systems Design
-- Interactive 3D Graphics
-- Human-Computer Interaction
-
----
-
-**Contact**: [Your Email/LinkedIn]
-**Portfolio**: [Your Portfolio URL]
-**Last Updated**: January 2026
