@@ -5,8 +5,19 @@ import * as THREE from 'three';
 import { IconBuild, IconErase, IconGrab, IconReset, IconRotate, IconHandRight, IconHandLeft } from './UI/Icons';
 import LoadingScreen from './UI/LoadingScreen';
 
+const PASTEL_PALETTE = [
+    { hex: 0xa5b4fc, str: "#a5b4fc", name: "Indigo" },
+    { hex: 0xfda4af, str: "#fda4af", name: "Rose" },
+    { hex: 0xfcd34d, str: "#fcd34d", name: "Amber" },
+    { hex: 0x6ee7b7, str: "#6ee7b7", name: "Emerald" },
+    { hex: 0x93c5fd, str: "#93c5fd", name: "Blue" },
+];
+
 const VoxelApp = () => {
     const [isLoading, setIsLoading] = React.useState(true);
+    const [colorIdx, setColorIdx] = React.useState(0);
+    const activeColor = PASTEL_PALETTE[colorIdx];
+
     const videoRef = useRef(null);
     const bioCanvasRef = useRef(null);
     const threeCanvasRef = useRef(null);
@@ -30,6 +41,7 @@ const VoxelApp = () => {
         isBuilding: false, buildTimer: 0,
         isErasing: false, eraseTimer: 0,
         resetTimer: 0, rotateTimer: 0,
+        cycleTimer: 0, // For color cycling
         startPinchPos: null, activeAxis: null,
         sketchKeys: new Set(),
     });
@@ -40,6 +52,7 @@ const VoxelApp = () => {
     const INTENT_HOLD = 500;
     const RESET_HOLD = 1000;
     const ROTATE_HOLD = 1000;
+    const CYCLE_HOLD = 1000; // Time to trigger color cycle
     const PINCH_THRESHOLD = 0.05;
 
     useEffect(() => {
@@ -183,47 +196,34 @@ const VoxelApp = () => {
         }
     };
 
-    const drawHUDCursor = (ctx, x, y, progress, color) => {
-        const size = 25;
+    const drawHUDRing = (ctx, x, y, progress, color) => {
+        // Background Ring
+        ctx.beginPath();
+        ctx.arc(x, y, 35, 0, Math.PI * 2);
+        ctx.strokeStyle = "rgba(255, 255, 255, 0.2)";
+        ctx.lineWidth = 4;
+        ctx.stroke();
 
-        ctx.save();
-        ctx.translate(x, y);
-
-        // Spin effect based on progress
-        const rotation = progress * Math.PI; // 180 degree rotation at full
-        ctx.rotate(rotation);
-
-        // 1. Background Square (Wireframe)
-        ctx.strokeStyle = "rgba(255, 255, 255, 0.3)";
-        ctx.lineWidth = 2;
-        ctx.strokeRect(-size, -size, size * 2, size * 2);
-
-        // 2. Corner Markers (Tech feel)
-        const m = 4;
-        ctx.fillStyle = color;
-        ctx.globalAlpha = 0.5 + (0.5 * progress);
-        ctx.fillRect(-size - 1, -size - 1, m, m); // Top-Left
-        ctx.fillRect(size - m + 1, -size - 1, m, m); // Top-Right
-        ctx.fillRect(-size - 1, size - m + 1, m, m); // Bottom-Left
-        ctx.fillRect(size - m + 1, size - m + 1, m, m); // Bottom-Right
-
-        // 3. Fill Animation (Center Out)
+        // Progress Ring
         if (progress > 0) {
-            const fillSize = size * 2 * progress;
-            const offset = fillSize / 2;
-            ctx.fillStyle = color;
-            ctx.globalAlpha = 0.4;
-            ctx.fillRect(-offset, -offset, fillSize, fillSize);
-
-            // Active Border
-            ctx.strokeStyle = color;
-            ctx.lineWidth = 2;
-            ctx.shadowBlur = 10;
+            ctx.shadowBlur = 15;
             ctx.shadowColor = color;
-            ctx.strokeRect(-offset, -offset, fillSize, fillSize);
-        }
+            ctx.beginPath();
+            ctx.arc(x, y, 35, -Math.PI / 2, (-Math.PI / 2) + (Math.PI * 2 * progress));
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 4;
+            ctx.lineCap = "round";
+            ctx.stroke();
 
-        ctx.restore();
+            // Center Dot
+            ctx.beginPath();
+            ctx.arc(x, y, 5, 0, Math.PI * 2);
+            ctx.fillStyle = color;
+            ctx.fill();
+
+            // Reset Shadow
+            ctx.shadowBlur = 0;
+        }
     };
 
     const drawCyberHand = (ctx, landmarks, label) => {
@@ -292,9 +292,11 @@ const VoxelApp = () => {
 
     const createFinalCube = (x, y, z) => {
         const g = new THREE.BoxGeometry(GRID_SIZE * 0.95, GRID_SIZE * 0.95, GRID_SIZE * 0.95);
+        const col = PASTEL_PALETTE[stateRef.current.tempColorIdx ?? colorIdx]; // Use temp color if cycling, else current
         const m = new THREE.MeshPhongMaterial({
-            color: 0xe0e7ff,
-            emissive: 0xa5b4fc,
+            color: 0xffffff, // Tint with texture or keep white base? Let's use the color
+            color: col.hex,
+            emissive: col.hex,
             emissiveIntensity: 0.2,
             transparent: true,
             opacity: 0.9,
@@ -343,12 +345,31 @@ const VoxelApp = () => {
             const lPalm = lHand[8].y < lHand[6].y && lHand[12].y < lHand[10].y && lHand[20].y < lHand[18].y;
             const rPalm = rHand[8].y < rHand[6].y && rHand[12].y < rHand[10].y && rHand[20].y < rHand[18].y;
 
+            // PEACE SIGN (Color Cycle) - Index & Middle UP, Ring & Pinky DOWN
+            const isPeace = (h) => h[8].y < h[6].y && h[12].y < h[10].y && h[16].y > h[14].y && h[20].y > h[18].y;
+            if (isPeace(lHand) || isPeace(rHand)) {
+                if (s.cycleTimer < CYCLE_HOLD) {
+                    s.cycleTimer += 16;
+                    // Visualize cycling (maybe a ring around the center or hand)
+                    const h = isPeace(rHand) ? rHand : lHand;
+                    drawHUDRing(bioCtx, h[9].x * bioCanvas.width, h[9].y * bioCanvas.height, s.cycleTimer / CYCLE_HOLD, activeColor.str);
+                    if (modeRef.current) modeRef.current.innerText = "Cycling Color...";
+                } else {
+                    // Trigger Cycle
+                    const nextIdx = (colorIdx + 1) % PASTEL_PALETTE.length;
+                    setColorIdx(nextIdx);
+                    s.cycleTimer = 0; // Reset to allow rapid cycling if held? Or force release. Let's force release or slow pulse.
+                }
+            } else {
+                s.cycleTimer = 0;
+            }
+
             // RESET
             if (lFist && rFist) {
                 s.rotateTimer = 0;
                 if (s.resetTimer < RESET_HOLD) {
                     s.resetTimer += 16;
-                    drawHUDCursor(bioCtx, bioCanvas.width / 2, bioCanvas.height / 2, s.resetTimer / RESET_HOLD, "#fca5a5");
+                    drawHUDRing(bioCtx, bioCanvas.width / 2, bioCanvas.height / 2, s.resetTimer / RESET_HOLD, "#fca5a5");
                     if (modeRef.current) modeRef.current.innerText = "Resetting...";
                 } else {
                     voxelGroup.position.set(0, 0, 0);
@@ -364,7 +385,7 @@ const VoxelApp = () => {
             if (lPalm && rPalm) {
                 if (s.rotateTimer < ROTATE_HOLD) {
                     s.rotateTimer += 16;
-                    drawHUDCursor(bioCtx, bioCanvas.width / 2, bioCanvas.height / 2, s.rotateTimer / ROTATE_HOLD, "#a78bfa");
+                    drawHUDRing(bioCtx, bioCanvas.width / 2, bioCanvas.height / 2, s.rotateTimer / ROTATE_HOLD, "#5eead4");
                     if (modeRef.current) modeRef.current.innerText = "Enabling Rotate...";
                 } else {
                     if (modeRef.current) modeRef.current.innerText = "Rotating Model";
@@ -391,7 +412,7 @@ const VoxelApp = () => {
             if (isFist) {
                 if (s.grabTimer < GRAB_HOLD) {
                     s.grabTimer += 16;
-                    drawHUDCursor(bioCtx, lHand[0].x * bioCanvas.width, lHand[0].y * bioCanvas.height, s.grabTimer / GRAB_HOLD, "#fbbf24");
+                    drawHUDRing(bioCtx, lHand[0].x * bioCanvas.width, lHand[0].y * bioCanvas.height, s.grabTimer / GRAB_HOLD, "#fbbf24");
                 } else {
                     if (!s.isGrabbing) { s.grabOffset.copy(voxelGroup.position).sub(handWorldPos); s.isGrabbing = true; }
                     voxelGroup.position.copy(handWorldPos).add(s.grabOffset);
@@ -422,7 +443,7 @@ const VoxelApp = () => {
                 s.buildTimer = 0;
                 if (s.eraseTimer < INTENT_HOLD) {
                     s.eraseTimer += 16;
-                    drawHUDCursor(bioCtx, px, py, s.eraseTimer / INTENT_HOLD, "#fca5a5");
+                    drawHUDRing(bioCtx, px, py, s.eraseTimer / INTENT_HOLD, "#fca5a5");
                     if (modeRef.current) modeRef.current.innerText = "Locking Eraser...";
                 } else {
                     s.isErasing = true;
@@ -440,7 +461,8 @@ const VoxelApp = () => {
                 s.eraseTimer = 0;
                 if (s.buildTimer < INTENT_HOLD) {
                     s.buildTimer += 16;
-                    drawHUDCursor(bioCtx, px, py, s.buildTimer / INTENT_HOLD, "#a78bfa");
+                    // Use active cycling color for the build ring!
+                    drawHUDRing(bioCtx, px, py, s.buildTimer / INTENT_HOLD, activeColor.str);
                     if (modeRef.current) modeRef.current.innerText = "Syncing Build...";
                 } else {
                     if (!s.isBuilding) {
@@ -498,6 +520,16 @@ const VoxelApp = () => {
                             <div className="flex justify-between text-sm font-medium text-slate-500">
                                 <span>SYSTEM STATUS</span>
                                 <span className="text-emerald-500">ONLINE</span>
+                            </div>
+                            <div className="flex justify-between items-center text-sm font-medium text-slate-500">
+                                <span>COLOR</span>
+                                <button
+                                    onClick={() => setColorIdx((prev) => (prev + 1) % PASTEL_PALETTE.length)}
+                                    className="flex items-center gap-2 hover:bg-slate-50 px-2 py-0.5 rounded transition-colors"
+                                >
+                                    <span className="w-3 h-3 rounded-full shadow-sm" style={{ backgroundColor: activeColor.str }}></span>
+                                    <span style={{ color: activeColor.str }}>{activeColor.name}</span>
+                                </button>
                             </div>
                             <div className="flex justify-between text-sm font-medium text-slate-500">
                                 <span>MODE</span>
