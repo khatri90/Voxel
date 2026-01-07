@@ -19,6 +19,8 @@ const VoxelApp = () => {
     const [isLoading, setIsLoading] = React.useState(true);
     const [colorIdx, _setColorIdx] = React.useState(0);
     const [isPaletteOpen, setIsPaletteOpen] = React.useState(false);
+    const [isGuideOpen, setIsGuideOpen] = React.useState(false);
+    const [showOnboarding, setShowOnboarding] = React.useState(false);
     const activeColor = VOXEL_PALETTE[colorIdx];
 
     // Helper to sync state and ref
@@ -141,6 +143,15 @@ const VoxelApp = () => {
             window.removeEventListener('resize', handleResize);
         };
     }, []);
+
+    // Onboarding Timer
+    useEffect(() => {
+        if (!isLoading) {
+            setShowOnboarding(true);
+            const timer = setTimeout(() => setShowOnboarding(false), 5000);
+            return () => clearTimeout(timer);
+        }
+    }, [isLoading]);
 
     const getDist = (p1, p2) => {
         return Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2) + (p1.z && p2.z ? Math.pow(p1.z - p2.z, 2) : 0));
