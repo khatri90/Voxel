@@ -1,0 +1,71 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Pastel Palette */
+  --pastel-bg: #f8fafc;
+  --pastel-surface: rgba(255, 255, 255, 0.7);
+  --pastel-surface-solid: #ffffff;
+  --pastel-border: #e2e8f0;
+
+  --pastel-text-main: #475569;
+  --pastel-text-muted: #94a3b8;
+
+  --pastel-primary: #a5b4fc;
+  /* Soft Indigo */
+  --pastel-secondary: #f9a8d4;
+  /* Soft Pink */
+  --pastel-accent: #5eead4;
+  /* Soft Teal */
+  --pastel-danger: #fca5a5;
+  /* Soft Red */
+
+  --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+  --glass-border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+body {
+  margin: 0;
+  background: #f1f5f9;
+  /* Light slate background behind the video if visible */
+  overflow: hidden;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  color: var(--pastel-text-main);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Glassmorphism Utilities */
+.glass-panel {
+  background: var(--pastel-surface);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  border-radius: 16px;
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 12px;
+}
+
+/* Animations */
+@keyframes soft-pulse {
+
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.8;
+    transform: scale(0.98);
+  }
+}
+
+.animate-soft-pulse {
+  animation: soft-pulse 3s ease-in-out infinite;
+}
