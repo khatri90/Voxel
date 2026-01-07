@@ -183,6 +183,49 @@ const VoxelApp = () => {
         }
     };
 
+    const drawHUDCursor = (ctx, x, y, progress, color) => {
+        const size = 25;
+
+        ctx.save();
+        ctx.translate(x, y);
+
+        // Spin effect based on progress
+        const rotation = progress * Math.PI; // 180 degree rotation at full
+        ctx.rotate(rotation);
+
+        // 1. Background Square (Wireframe)
+        ctx.strokeStyle = "rgba(255, 255, 255, 0.3)";
+        ctx.lineWidth = 2;
+        ctx.strokeRect(-size, -size, size * 2, size * 2);
+
+        // 2. Corner Markers (Tech feel)
+        const m = 4;
+        ctx.fillStyle = color;
+        ctx.globalAlpha = 0.5 + (0.5 * progress);
+        ctx.fillRect(-size - 1, -size - 1, m, m); // Top-Left
+        ctx.fillRect(size - m + 1, -size - 1, m, m); // Top-Right
+        ctx.fillRect(-size - 1, size - m + 1, m, m); // Bottom-Left
+        ctx.fillRect(size - m + 1, size - m + 1, m, m); // Bottom-Right
+
+        // 3. Fill Animation (Center Out)
+        if (progress > 0) {
+            const fillSize = size * 2 * progress;
+            const offset = fillSize / 2;
+            ctx.fillStyle = color;
+            ctx.globalAlpha = 0.4;
+            ctx.fillRect(-offset, -offset, fillSize, fillSize);
+
+            // Active Border
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 2;
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = color;
+            ctx.strokeRect(-offset, -offset, fillSize, fillSize);
+        }
+
+        ctx.restore();
+    };
+
     const drawCyberHand = (ctx, landmarks, label) => {
         const bioCanvas = bioCanvasRef.current;
         const smoothed = smoothedLandmarksRef.current;
@@ -305,7 +348,7 @@ const VoxelApp = () => {
                 s.rotateTimer = 0;
                 if (s.resetTimer < RESET_HOLD) {
                     s.resetTimer += 16;
-                    drawHUDVoxel(bioCtx, bioCanvas.width / 2, bioCanvas.height / 2, s.resetTimer / RESET_HOLD, "#fca5a5");
+                    drawHUDCursor(bioCtx, bioCanvas.width / 2, bioCanvas.height / 2, s.resetTimer / RESET_HOLD, "#fca5a5");
                     if (modeRef.current) modeRef.current.innerText = "Resetting...";
                 } else {
                     voxelGroup.position.set(0, 0, 0);
@@ -321,7 +364,7 @@ const VoxelApp = () => {
             if (lPalm && rPalm) {
                 if (s.rotateTimer < ROTATE_HOLD) {
                     s.rotateTimer += 16;
-                    drawHUDVoxel(bioCtx, bioCanvas.width / 2, bioCanvas.height / 2, s.rotateTimer / ROTATE_HOLD, "#5eead4");
+                    drawHUDCursor(bioCtx, bioCanvas.width / 2, bioCanvas.height / 2, s.rotateTimer / ROTATE_HOLD, "#a78bfa");
                     if (modeRef.current) modeRef.current.innerText = "Enabling Rotate...";
                 } else {
                     if (modeRef.current) modeRef.current.innerText = "Rotating Model";
@@ -348,7 +391,7 @@ const VoxelApp = () => {
             if (isFist) {
                 if (s.grabTimer < GRAB_HOLD) {
                     s.grabTimer += 16;
-                    drawHUDVoxel(bioCtx, lHand[0].x * bioCanvas.width, lHand[0].y * bioCanvas.height, s.grabTimer / GRAB_HOLD, "#fbbf24");
+                    drawHUDCursor(bioCtx, lHand[0].x * bioCanvas.width, lHand[0].y * bioCanvas.height, s.grabTimer / GRAB_HOLD, "#fbbf24");
                 } else {
                     if (!s.isGrabbing) { s.grabOffset.copy(voxelGroup.position).sub(handWorldPos); s.isGrabbing = true; }
                     voxelGroup.position.copy(handWorldPos).add(s.grabOffset);
@@ -379,7 +422,7 @@ const VoxelApp = () => {
                 s.buildTimer = 0;
                 if (s.eraseTimer < INTENT_HOLD) {
                     s.eraseTimer += 16;
-                    drawHUDVoxel(bioCtx, px, py, s.eraseTimer / INTENT_HOLD, "#fca5a5");
+                    drawHUDCursor(bioCtx, px, py, s.eraseTimer / INTENT_HOLD, "#fca5a5");
                     if (modeRef.current) modeRef.current.innerText = "Locking Eraser...";
                 } else {
                     s.isErasing = true;
@@ -397,7 +440,7 @@ const VoxelApp = () => {
                 s.eraseTimer = 0;
                 if (s.buildTimer < INTENT_HOLD) {
                     s.buildTimer += 16;
-                    drawHUDVoxel(bioCtx, px, py, s.buildTimer / INTENT_HOLD, "#5eead4");
+                    drawHUDCursor(bioCtx, px, py, s.buildTimer / INTENT_HOLD, "#a78bfa");
                     if (modeRef.current) modeRef.current.innerText = "Syncing Build...";
                 } else {
                     if (!s.isBuilding) {
