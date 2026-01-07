@@ -61,7 +61,10 @@ const VoxelApp = () => {
     const INTENT_HOLD = 500;
     const RESET_HOLD = 1000;
     const ROTATE_HOLD = 1000;
-    const CYCLE_HOLD = 1000; // Time to trigger color cycle
+    const RESET_HOLD = 1000;
+    const ROTATE_HOLD = 1000;
+    const CYCLE_HOLD = 500; // Reduced to 500ms for faster cycling
+    const PINCH_THRESHOLD = 0.05;
     const PINCH_THRESHOLD = 0.05;
 
     useEffect(() => {
@@ -534,15 +537,22 @@ const VoxelApp = () => {
                                 <span>SYSTEM STATUS</span>
                                 <span className="text-emerald-500">ONLINE</span>
                             </div>
-                            <div className="flex justify-between items-center text-sm font-medium text-slate-500">
-                                <span>COLOR</span>
-                                <button
-                                    onClick={() => setColorIdx(((stateRef.current.colorIdx || 0) + 1) % VOXEL_PALETTE.length)}
-                                    className="flex items-center gap-2 hover:bg-slate-50 px-2 py-0.5 rounded transition-colors"
-                                >
-                                    <span className="w-3 h-3 rounded-full shadow-sm" style={{ backgroundColor: activeColor.str }}></span>
+                            <div className="flex flex-col gap-1.5 text-sm font-medium text-slate-500">
+                                <div className="flex justify-between items-center">
+                                    <span>PALETTE</span>
                                     <span style={{ color: activeColor.str }}>{activeColor.name}</span>
-                                </button>
+                                </div>
+                                <div className="flex flex-wrap gap-1.5">
+                                    {VOXEL_PALETTE.map((col, idx) => (
+                                        <button
+                                            key={col.name}
+                                            onClick={() => setColorIdx(idx)}
+                                            className={`w-6 h-6 rounded-full shadow-sm border-2 transition-all ${colorIdx === idx ? 'border-indigo-500 scale-110' : 'border-transparent hover:scale-105'}`}
+                                            style={{ backgroundColor: col.str }}
+                                            title={col.name}
+                                        />
+                                    ))}
+                                </div>
                             </div>
                             <div className="flex justify-between text-sm font-medium text-slate-500">
                                 <span>MODE</span>
