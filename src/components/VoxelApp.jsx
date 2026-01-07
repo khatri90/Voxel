@@ -2,6 +2,9 @@ import React, { useEffect, useRef } from 'react';
 import { Hands } from '@mediapipe/hands';
 import { Camera } from '@mediapipe/camera_utils';
 import * as THREE from 'three';
+import { IconBuild, IconErase, IconGrab, IconReset, IconRotate, IconHandRight, IconHandLeft } from './UI/Icons';
+import LoadingScreen from './UI/LoadingScreen';
+
 const VOXEL_PALETTE = [
     { hex: 0xa5b4fc, str: "#a5b4fc", name: "Soft Indigo" },
     { hex: 0xfda4af, str: "#fda4af", name: "Soft Rose" },
