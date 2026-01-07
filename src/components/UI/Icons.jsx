@@ -17,110 +17,79 @@ const IconBase = ({ children, className = "w-6 h-6", ...props }) => (
     </svg>
 );
 
-// --- SIMPLIFIED GEOMETRIC HAND ICONS ---
+// --- ACTION ICONS (No Hands, just Concepts) ---
 
-// IconGestureBuild: "Pinch Left Hand"
-// Representation: Hand with Index and Thumb touching (Circle) + 3 fingers up/out.
-export const IconGestureBuild = (props) => (
+// IconActionBuild: Add Cube
+export const IconActionBuild = (props) => (
     <IconBase {...props}>
-        {/* Pinch Circle */}
-        <circle cx="9" cy="14" r="3.5" />
-        {/* Middle, Ring, Pinky fingers sticking up */}
-        <path d="M12.5 14V7a1.5 1.5 0 0 1 3 0v7" />
-        <path d="M15.5 14V9a1.5 1.5 0 0 1 3 0v5" />
-        {/* Wrist */}
-        <path d="M7 17v4" />
-        <path d="M17 17v4" />
-        <text x="5" y="6" fontSize="5" fontWeight="bold" fill="currentColor">L</text>
+        {/* Main Cube */}
+        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+        <path d="M3.3 7l8.7 5 8.7-5" />
+        <path d="M12 22V12" />
+        {/* Plus Sign (Overlay) */}
+        <rect x="8" y="5" width="8" height="8" rx="1" fill="currentColor" className="text-white dark:text-slate-900" opacity="0.9" />
+        <path d="M12 6v6" strokeWidth="2.5" className="text-indigo-600" />
+        <path d="M9 9h6" strokeWidth="2.5" className="text-indigo-600" />
     </IconBase>
 );
 
-// IconGestureGrab: "Hold Right Fist"
-// Representation: A solid rounded square (knuckles) with thumb crossed.
-export const IconGestureGrab = (props) => (
+// IconActionErase: Trash / Remove
+export const IconActionErase = (props) => (
     <IconBase {...props}>
-        {/* Fist Shape */}
-        <rect x="6" y="8" width="12" height="10" rx="3" />
-        {/* Finger lines */}
-        <path d="M6 13h12" />
-        {/* Thumb crossing over */}
-        <path d="M14 13c0 3-2 5-5 5" />
-        {/* Wrist */}
-        <path d="M9 18v4" />
-        <path d="M15 18v4" />
-        {/* Motion lines */}
-        <path d="M19 6l2 2" />
-        <path d="M21 6l-2 2" />
-        <text x="4" y="21" fontSize="5" fontWeight="bold" fill="currentColor">R</text>
+        <path d="M3 6h18" />
+        <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+        <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+        {/* X mark on trash bin */}
+        <path d="M10 11l4 4" />
+        <path d="M14 11l-4 4" />
     </IconBase>
 );
 
-// IconGestureErase: "Pinch Right + Point Left"
-// Representation: Two distinct hands.
-export const IconGestureErase = (props) => (
+// IconActionGrab: Move / Drag Arrows
+export const IconActionGrab = (props) => (
     <IconBase {...props}>
-        {/* Right Pinch (Bottom Right) */}
-        <g transform="translate(13, 13) scale(0.45)">
-            <circle cx="12" cy="12" r="10" />
-            <circle cx="12" cy="12" r="3" fill="currentColor" />
-        </g>
-        <text x="18" y="22" fontSize="5" fontWeight="bold" fill="currentColor">R</text>
-
-        {/* Left Point (Top Left) */}
-        <g transform="translate(2, 2) scale(0.6)">
-            {/* Pointing Finger */}
-            <path d="M8 20V8c0-2 1.5-3 3-3s3 1 3 3v12" />
-            <path d="M8 14h6" />
-            {/* Thumb */}
-            <path d="M8 16c-2 0-4-1-4-3" />
-        </g>
-        <text x="2" y="22" fontSize="5" fontWeight="bold" fill="currentColor">L</text>
-        {/* X Mark */}
-        <path d="M18 4l-4 4" strokeWidth="1.5" />
-        <path d="M14 4l4 4" strokeWidth="1.5" />
+        <path d="M5 9l-3 3 3 3" />
+        <path d="M9 5l3-3 3 3" />
+        <path d="M19 9l3 3-3 3" />
+        <path d="M9 19l3 3 3-3" />
+        <path d="M2 12h20" />
+        <path d="M12 2v20" />
+        {/* Center dot */}
+        <circle cx="12" cy="12" r="2" fill="currentColor" />
     </IconBase>
 );
 
-// IconGestureReset: "Fists Together"
-// Representation: Two simple bumper shapes.
-export const IconGestureReset = (props) => (
+// IconActionColor: Palette / Theme
+export const IconActionColor = (props) => (
     <IconBase {...props}>
-        {/* Left Fist Block */}
-        <path d="M3 8h6a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H3" />
-        <path d="M3 13h8" />
-        {/* Right Fist Block */}
-        <path d="M21 8h-6a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h6" />
-        <path d="M21 13h-8" />
-        {/* Impact */}
-        <path d="M12 7v2" />
-        <path d="M12 15v2" />
+        <circle cx="13.5" cy="6.5" r=".5" fill="currentColor" />
+        <circle cx="17.5" cy="10.5" r=".5" fill="currentColor" />
+        <circle cx="8.5" cy="7.5" r=".5" fill="currentColor" />
+        <circle cx="6.5" cy="12.5" r=".5" fill="currentColor" />
+        <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12c0 2.228.729 4.287 1.967 5.965C5.035 19.416 6.544 20.373 8.5 20c.928-.176 1.5-.788 1.5-1.5 0-.573-.243-1.07-.63-1.554-.23-.287-.514-.664-.47-1.146.065-.722.957-1.3 1.6-1.3.4 0 .5.3.5.5v1.5c0 1.5 1.5 3 4.5 3z" />
     </IconBase>
 );
 
-// IconGestureRotate: "Palms Open"
-export const IconGestureRotate = (props) => (
+// IconActionReset: Undo / Refresh
+export const IconActionReset = (props) => (
     <IconBase {...props}>
-        {/* Left Palm */}
-        <rect x="2" y="5" width="8" height="12" rx="2" />
-        <path d="M2 11h8" />
-        {/* Right Palm */}
-        <rect x="14" y="5" width="8" height="12" rx="2" />
-        <path d="M14 11h8" />
-        {/* Rotation Arrow */}
-        <path d="M12 20a8 8 0 0 0 8-8" strokeDasharray="2 2" opacity="0.5" />
+        <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+        <path d="M3 3v5h5" />
     </IconBase>
 );
 
-// IconGestureCycle: "Peace Sign"
-// Representation: V Shape fingers.
-export const IconGestureCycle = (props) => (
+// IconActionRotate: 3D Rotate
+export const IconActionRotate = (props) => (
     <IconBase {...props}>
-        {/* Palm */}
-        <rect x="7" y="12" width="10" height="10" rx="3" />
-        {/* Fingers */}
-        <path d="M8 12V4a2 2 0 0 1 4 0v8" />
-        <path d="M16 12V4a2 2 0 0 0-4 0v8" />
-        {/* Color Dots */}
-        <circle cx="12" cy="17" r="2" fill="currentColor" opacity="0.5" />
+        <path d="M12 3a9 9 0 0 1 9 9" opacity="0.3" />
+        <path d="M12 21a9 9 0 0 1-9-9" opacity="0.3" />
+        <path d="M2 12h2" />
+        <path d="M20 12h2" />
+        {/* Axis Rotation */}
+        <path d="M19.07 4.93L17.66 6.34" />
+        <path d="M4.93 19.07l1.41-1.41" />
+        <circle cx="12" cy="12" r="5" strokeStyle="dashed" />
+        <path d="M12 12v6l-2-2" />
+        <path d="M14 16l-2 2" />
     </IconBase>
 );
