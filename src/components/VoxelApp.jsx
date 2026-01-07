@@ -582,6 +582,36 @@ const VoxelApp = () => {
                         </li>
                     </ul>
                 </div>
+
+                {/* BOTTOM PALETTE DOCK */}
+                <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4 pointer-events-auto z-50">
+
+                    {/* Expanded Palette */}
+                    <div className={`glass-panel p-3 flex gap-3 transition-all duration-300 origin-bottom ${isPaletteOpen ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-10 scale-90 pointer-events-none'}`}>
+                        {VOXEL_PALETTE.map((col, idx) => (
+                            <button
+                                key={col.name}
+                                onClick={() => { setColorIdx(idx); setIsPaletteOpen(false); }}
+                                className={`w-8 h-8 rounded-full shadow-sm border-2 transition-all hover:scale-110 ${colorIdx === idx ? 'border-indigo-500 scale-110' : 'border-transparent'}`}
+                                style={{ backgroundColor: col.str }}
+                                title={col.name}
+                            />
+                        ))}
+                    </div>
+
+                    {/* Main Toggle Button */}
+                    <button
+                        onClick={() => setIsPaletteOpen(!isPaletteOpen)}
+                        className="glass-panel p-3 rounded-full hover:scale-110 transition-transform active:scale-95 flex items-center gap-3 pr-5"
+                    >
+                        <div className="w-8 h-8 rounded-full shadow-lg border-2 border-white ring-2 ring-slate-100" style={{ backgroundColor: activeColor.str }}></div>
+                        <div className="flex flex-col items-start leading-none">
+                            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Color</span>
+                            <span className="text-sm font-bold text-slate-700">{activeColor.name}</span>
+                        </div>
+                    </button>
+                </div>
+
             </div>
 
             {/* Video Feed (Hidden UI, just visuals) */}
