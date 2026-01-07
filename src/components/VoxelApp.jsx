@@ -532,7 +532,7 @@ const VoxelApp = () => {
 
                         <div className="space-y-1">
                             <div className="flex justify-between text-sm font-medium text-slate-500">
-                                <span>SYSTEM STATUS</span>
+                                <span>STATUS</span>
                                 <span className="text-emerald-500">ONLINE</span>
                             </div>
                             <div className="flex justify-between text-sm font-medium text-slate-500">
