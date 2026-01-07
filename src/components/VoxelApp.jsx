@@ -3,8 +3,10 @@ import { Hands } from '@mediapipe/hands';
 import { Camera } from '@mediapipe/camera_utils';
 import * as THREE from 'three';
 import { IconBuild, IconErase, IconGrab, IconReset, IconRotate, IconHandRight, IconHandLeft } from './UI/Icons';
+import LoadingScreen from './UI/LoadingScreen';
 
 const VoxelApp = () => {
+    const [isLoading, setIsLoading] = React.useState(true);
     const videoRef = useRef(null);
     const bioCanvasRef = useRef(null);
     const threeCanvasRef = useRef(null);
@@ -97,7 +99,9 @@ const VoxelApp = () => {
                 width: 1280,
                 height: 720,
             });
-            cam.start();
+            cam.start().then(() => {
+                setTimeout(() => setIsLoading(false), 2000); // Small delay for smooth transition
+            });
         }
 
         // Handle resize
@@ -469,6 +473,9 @@ const VoxelApp = () => {
                 ref={bioCanvasRef}
                 className="absolute inset-0 w-full h-full z-20 -scale-x-100 pointer-events-none"
             />
+
+            {/* Loading Screen */}
+            {isLoading && <LoadingScreen />}
         </div>
     );
 };
