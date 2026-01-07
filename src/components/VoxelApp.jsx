@@ -523,7 +523,7 @@ const VoxelApp = () => {
             if (s.isBuilding || s.buildTimer > 0 || s.isErasing || s.eraseTimer > 0) {
                 crosshair.visible = true;
                 crosshair.position.copy(voxelGroup.localToWorld(new THREE.Vector3(gx, gy, gz)));
-                crosshair.material.color.set((s.isErasing || s.eraseTimer > 0) ? 0xfca5a5 : 0xa5b4fc);
+                crosshair.material.color.set((s.isErasing || s.eraseTimer > 0) ? 0xfca5a5 : 0xffff00);
             }
         }
     };
@@ -559,13 +559,13 @@ const VoxelApp = () => {
                 </div>
 
                 {/* Collapsible Gesture Guide Card */}
-                <div className={`glass-panel w-full max-w-[280px] sm:max-w-sm self-start animate-slide-up pointer-events-auto transition-all duration-300 overflow-hidden ${isGuideOpen ? 'p-4 sm:p-5' : 'p-3'}`}>
+                <div className={`absolute top-4 right-4 md:top-8 md:right-8 glass-panel w-full max-w-[280px] sm:max-w-xs animate-slide-up pointer-events-auto transition-all duration-300 overflow-hidden ${isGuideOpen ? 'p-4 sm:p-5' : 'p-3'} z-50`}>
                     <button
                         onClick={() => setIsGuideOpen(!isGuideOpen)}
                         className="w-full flex items-center justify-between gap-2 font-bold text-slate-700"
                     >
                         <div className="flex items-center gap-2">
-                            <span className="text-sm sm:text-base">GESTURE CONTROL</span>
+                            <span className="text-sm sm:text-base">Help</span>
                             <span className="text-[10px] bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded-full">AI</span>
                         </div>
                         <div className={`transition-transform duration-300 ${isGuideOpen ? 'rotate-180' : ''}`}>
