@@ -547,64 +547,75 @@ const VoxelApp = () => {
                     </div>
                 </div>
 
-                {/* Gesture Guide Card */}
-                <div className="glass-panel p-5 max-w-sm self-start animate-slide-up pointer-events-auto">
-                    <h3 className="font-bold text-slate-700 mb-3 border-b border-slate-200 pb-2 flex items-center gap-2">
-                        GESTURE CONTROL
-                        <span className="text-[10px] bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded-full">AI</span>
-                    </h3>
-                    <ul className="space-y-2 text-sm text-slate-600">
-                        <li className="flex items-center gap-3 p-1 rounded hover:bg-slate-50/50">
-                            <span className="w-10 h-10 rounded flex items-center justify-center bg-indigo-100 text-indigo-600 shadow-sm shrink-0">
-                                <IconActionBuild className="w-6 h-6" />
-                            </span>
-                            <div className="flex flex-col leading-tight">
-                                <strong className="text-indigo-600">Build</strong>
-                                <span className="text-xs text-slate-400">Pinch <strong>Left</strong> Hand</span>
-                            </div>
-                        </li>
-                        <li className="flex items-center gap-3 p-1 rounded hover:bg-slate-50/50">
-                            <span className="w-10 h-10 rounded flex items-center justify-center bg-rose-100 text-rose-500 shadow-sm shrink-0">
-                                <IconActionErase className="w-6 h-6" />
-                            </span>
-                            <div className="flex flex-col leading-tight">
-                                <strong className="text-rose-500">Erase</strong>
-                                <span className="text-xs text-slate-400">Pinch <strong>Right</strong> + Point <strong>Left</strong></span>
-                            </div>
-                        </li>
-                        <li className="flex items-center gap-3 p-1 rounded hover:bg-slate-50/50">
-                            <span className="w-10 h-10 rounded flex items-center justify-center bg-amber-100 text-amber-600 shadow-sm shrink-0">
-                                <IconActionGrab className="w-6 h-6" />
-                            </span>
-                            <div className="flex flex-col leading-tight">
-                                <strong className="text-amber-600">Grab & Move</strong>
-                                <span className="text-xs text-slate-400">Hold <strong>Right</strong> Fist</span>
-                            </div>
-                        </li>
-                        <li className="flex items-center gap-3 p-1 rounded hover:bg-slate-50/50">
-                            <span className="w-10 h-10 rounded flex items-center justify-center bg-fuchsia-100 text-fuchsia-600 shadow-sm shrink-0">
-                                <IconActionColor className="w-6 h-6" />
-                            </span>
-                            <div className="flex flex-col leading-tight">
-                                <strong className="text-fuchsia-600">Cycle Color</strong>
-                                <span className="text-xs text-slate-400">Peace Sign (Any Hand)</span>
-                            </div>
-                        </li>
-                        <li className="flex items-center gap-3 p-1 rounded hover:bg-slate-50/50 mt-2 border-t border-slate-100 pt-2">
-                            <div className="flex gap-2 shrink-0">
-                                <span className="w-8 h-8 rounded flex items-center justify-center bg-slate-100 text-slate-500">
-                                    <IconActionReset className="w-5 h-5" />
+                {/* Collapsible Gesture Guide Card */}
+                <div className={`glass-panel max-w-sm self-start animate-slide-up pointer-events-auto transition-all duration-300 overflow-hidden ${isGuideOpen ? 'p-5' : 'p-3'}`}>
+                    <button
+                        onClick={() => setIsGuideOpen(!isGuideOpen)}
+                        className="w-full flex items-center justify-between gap-2 font-bold text-slate-700"
+                    >
+                        <div className="flex items-center gap-2">
+                            <span>GESTURE CONTROL</span>
+                            <span className="text-[10px] bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded-full">AI</span>
+                        </div>
+                        <div className={`transition-transform duration-300 ${isGuideOpen ? 'rotate-180' : ''}`}>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6" /></svg>
+                        </div>
+                    </button>
+
+                    <div className={`overflow-hidden transition-all duration-300 ${isGuideOpen ? 'max-h-[500px] opacity-100 mt-3 border-t border-slate-200 pt-2' : 'max-h-0 opacity-0'}`}>
+                        <ul className="space-y-2 text-sm text-slate-600">
+                            <li className="flex items-center gap-3 p-1 rounded hover:bg-slate-50/50">
+                                <span className="w-10 h-10 rounded flex items-center justify-center bg-indigo-100 text-indigo-600 shadow-sm shrink-0">
+                                    <IconActionBuild className="w-6 h-6" />
                                 </span>
-                                <span className="w-8 h-8 rounded flex items-center justify-center bg-slate-100 text-slate-500">
-                                    <IconActionRotate className="w-5 h-5" />
+                                <div className="flex flex-col leading-tight">
+                                    <strong className="text-indigo-600">Build</strong>
+                                    <span className="text-xs text-slate-400">Pinch <strong>Left</strong> Hand</span>
+                                </div>
+                            </li>
+                            <li className="flex items-center gap-3 p-1 rounded hover:bg-slate-50/50">
+                                <span className="w-10 h-10 rounded flex items-center justify-center bg-rose-100 text-rose-500 shadow-sm shrink-0">
+                                    <IconActionErase className="w-6 h-6" />
                                 </span>
-                            </div>
-                            <div className="flex flex-col leading-tight">
-                                <span className="text-xs font-semibold text-slate-500">Reset / Rotate</span>
-                                <span className="text-[10px] text-slate-400">Fists Together / Palms Open</span>
-                            </div>
-                        </li>
-                    </ul>
+                                <div className="flex flex-col leading-tight">
+                                    <strong className="text-rose-500">Erase</strong>
+                                    <span className="text-xs text-slate-400">Pinch <strong>Right</strong> + Point <strong>Left</strong></span>
+                                </div>
+                            </li>
+                            <li className="flex items-center gap-3 p-1 rounded hover:bg-slate-50/50">
+                                <span className="w-10 h-10 rounded flex items-center justify-center bg-amber-100 text-amber-600 shadow-sm shrink-0">
+                                    <IconActionGrab className="w-6 h-6" />
+                                </span>
+                                <div className="flex flex-col leading-tight">
+                                    <strong className="text-amber-600">Grab & Move</strong>
+                                    <span className="text-xs text-slate-400">Hold <strong>Right</strong> Fist</span>
+                                </div>
+                            </li>
+                            <li className="flex items-center gap-3 p-1 rounded hover:bg-slate-50/50">
+                                <span className="w-10 h-10 rounded flex items-center justify-center bg-fuchsia-100 text-fuchsia-600 shadow-sm shrink-0">
+                                    <IconActionColor className="w-6 h-6" />
+                                </span>
+                                <div className="flex flex-col leading-tight">
+                                    <strong className="text-fuchsia-600">Cycle Color</strong>
+                                    <span className="text-xs text-slate-400">Peace Sign (Any Hand)</span>
+                                </div>
+                            </li>
+                            <li className="flex items-center gap-3 p-1 rounded hover:bg-slate-50/50 mt-2 border-t border-slate-100 pt-2">
+                                <div className="flex gap-2 shrink-0">
+                                    <span className="w-8 h-8 rounded flex items-center justify-center bg-slate-100 text-slate-500">
+                                        <IconActionReset className="w-5 h-5" />
+                                    </span>
+                                    <span className="w-8 h-8 rounded flex items-center justify-center bg-slate-100 text-slate-500">
+                                        <IconActionRotate className="w-5 h-5" />
+                                    </span>
+                                </div>
+                                <div className="flex flex-col leading-tight">
+                                    <span className="text-xs font-semibold text-slate-500">Reset / Rotate</span>
+                                    <span className="text-[10px] text-slate-400">Fists Together / Palms Open</span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
 
                 {/* BOTTOM PALETTE DOCK */}
@@ -657,6 +668,31 @@ const VoxelApp = () => {
                 ref={bioCanvasRef}
                 className="absolute inset-0 w-full h-full z-20 -scale-x-100 pointer-events-none"
             />
+
+            {/* Onboarding Popup */}
+            {showOnboarding && (
+                <div className="absolute top-24 left-1/2 -translate-x-1/2 glass-panel p-6 max-w-md w-[90%] z-[60] animate-bounce-in shadow-2xl border-l-4 border-indigo-500">
+                    <button
+                        onClick={() => setShowOnboarding(false)}
+                        className="absolute top-2 right-2 text-slate-400 hover:text-slate-600"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg>
+                    </button>
+                    <h3 className="tex-lg font-bold text-slate-800 mb-2 flex items-center gap-2">
+                        <span>👋 Welcome to Voxel Sculpt</span>
+                    </h3>
+                    <div className="space-y-2 text-sm text-slate-600">
+                        <p className="flex items-start gap-2">
+                            <span className="bg-indigo-100 text-indigo-600 rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">1</span>
+                            <span>Place your camera at least <strong className="text-indigo-600">50cm away</strong> for best hand tracking.</span>
+                        </p>
+                        <p className="flex items-start gap-2">
+                            <span className="bg-indigo-100 text-indigo-600 rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">2</span>
+                            <span>Rotate your device <strong className="text-indigo-600">horizontally</strong> for a wider work area.</span>
+                        </p>
+                    </div>
+                </div>
+            )}
 
             {/* Loading Screen */}
             {isLoading && <LoadingScreen />}
