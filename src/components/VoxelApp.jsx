@@ -124,12 +124,31 @@ const VoxelApp = () => {
     };
 
     const drawHUDCircle = (ctx, x, y, progress, color) => {
+        // Background Ring
+        ctx.beginPath();
+        ctx.arc(x, y, 35, 0, Math.PI * 2);
+        ctx.strokeStyle = "rgba(255, 255, 255, 0.2)";
+        ctx.lineWidth = 4;
+        ctx.stroke();
+
+        // Progress Ring
+        ctx.shadowBlur = 15;
+        ctx.shadowColor = color;
         ctx.beginPath();
         ctx.arc(x, y, 35, -Math.PI / 2, (-Math.PI / 2) + (Math.PI * 2 * progress));
-        ctx.lineWidth = 5; ctx.strokeStyle = color; ctx.stroke();
-        ctx.setLineDash([3, 5]);
-        ctx.beginPath(); ctx.arc(x, y, 30, 0, Math.PI * 2); ctx.lineWidth = 1; ctx.stroke();
-        ctx.setLineDash([]);
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 4;
+        ctx.lineCap = "round";
+        ctx.stroke();
+
+        // Center Dot
+        ctx.beginPath();
+        ctx.arc(x, y, 4, 0, Math.PI * 2);
+        ctx.fillStyle = color;
+        ctx.fill();
+
+        // Reset Shadow for other elements
+        ctx.shadowBlur = 0;
     };
 
     const drawCyberHand = (ctx, landmarks, label) => {
