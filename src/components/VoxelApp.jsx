@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { Hands } from '@mediapipe/hands';
 import { Camera } from '@mediapipe/camera_utils';
 import * as THREE from 'three';
-import { IconBuild, IconErase, IconGrab, IconReset, IconRotate, IconHandRight, IconHandLeft } from './UI/Icons';
+import { IconBuild, IconErase, IconGrab, IconReset, IconRotate, IconPeace } from './UI/Icons';
 import LoadingScreen from './UI/LoadingScreen';
 
 const VOXEL_PALETTE = [
@@ -548,37 +548,61 @@ const VoxelApp = () => {
                 </div>
 
                 {/* Gesture Guide Card */}
-                <div className="glass-panel p-6 max-w-sm self-start animate-slide-up pointer-events-auto">
-                    <h3 className="font-bold text-slate-700 mb-4 border-b border-slate-200 pb-2">GESTURE GUIDE</h3>
-                    <ul className="space-y-3 text-sm text-slate-600">
-                        <li className="flex items-center gap-3">
-                            <span className="w-8 h-8 rounded flex items-center justify-center bg-indigo-100 text-indigo-600">
+                <div className="glass-panel p-5 max-w-sm self-start animate-slide-up pointer-events-auto">
+                    <h3 className="font-bold text-slate-700 mb-3 border-b border-slate-200 pb-2 flex items-center gap-2">
+                        GESTURE CONTROL
+                        <span className="text-[10px] bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded-full">AI</span>
+                    </h3>
+                    <ul className="space-y-2 text-sm text-slate-600">
+                        <li className="flex items-center gap-3 p-1 rounded hover:bg-slate-50/50">
+                            <span className="w-8 h-8 rounded flex items-center justify-center bg-indigo-100 text-indigo-600 shadow-sm">
                                 <IconBuild className="w-5 h-5" />
                             </span>
-                            <span>Pinch Right to <strong className="text-indigo-500">Build</strong></span>
+                            <div className="flex flex-col leading-tight">
+                                <strong className="text-indigo-600">Build</strong>
+                                <span className="text-xs text-slate-400">Pinch Right Hand</span>
+                            </div>
                         </li>
-                        <li className="flex items-center gap-3">
-                            <span className="w-8 h-8 rounded flex items-center justify-center bg-rose-100 text-rose-500">
+                        <li className="flex items-center gap-3 p-1 rounded hover:bg-slate-50/50">
+                            <span className="w-8 h-8 rounded flex items-center justify-center bg-rose-100 text-rose-500 shadow-sm">
                                 <IconErase className="w-5 h-5" />
                             </span>
-                            <span>Pinch Left + Point Right to <strong className="text-rose-500">Erase</strong></span>
+                            <div className="flex flex-col leading-tight">
+                                <strong className="text-rose-500">Erase</strong>
+                                <span className="text-xs text-slate-400">Pinch Left + Point Right</span>
+                            </div>
                         </li>
-                        <li className="flex items-center gap-3">
-                            <span className="w-8 h-8 rounded flex items-center justify-center bg-amber-100 text-amber-600">
+                        <li className="flex items-center gap-3 p-1 rounded hover:bg-slate-50/50">
+                            <span className="w-8 h-8 rounded flex items-center justify-center bg-amber-100 text-amber-600 shadow-sm">
                                 <IconGrab className="w-5 h-5" />
                             </span>
-                            <span>Hold Left Fist to <strong className="text-amber-600">Grab & Move</strong></span>
+                            <div className="flex flex-col leading-tight">
+                                <strong className="text-amber-600">Grab & Move</strong>
+                                <span className="text-xs text-slate-400">Hold Left Fist</span>
+                            </div>
                         </li>
-                        <li className="flex items-center gap-3">
-                            <div className="flex gap-2">
-                                <span className="w-6 h-6 rounded flex items-center justify-center bg-slate-100 text-slate-500">
+                        <li className="flex items-center gap-3 p-1 rounded hover:bg-slate-50/50">
+                            <span className="w-8 h-8 rounded flex items-center justify-center bg-fuchsia-100 text-fuchsia-600 shadow-sm">
+                                <IconPeace className="w-5 h-5" />
+                            </span>
+                            <div className="flex flex-col leading-tight">
+                                <strong className="text-fuchsia-600">Cycle Color</strong>
+                                <span className="text-xs text-slate-400">Peace Sign (One Hand)</span>
+                            </div>
+                        </li>
+                        <li className="flex items-center gap-3 p-1 rounded hover:bg-slate-50/50 mt-2 border-t border-slate-100 pt-2">
+                            <div className="flex gap-1.5">
+                                <span className="w-7 h-7 rounded flex items-center justify-center bg-slate-100 text-slate-500">
                                     <IconReset className="w-4 h-4" />
                                 </span>
-                                <span className="w-6 h-6 rounded flex items-center justify-center bg-slate-100 text-slate-500">
+                                <span className="w-7 h-7 rounded flex items-center justify-center bg-slate-100 text-slate-500">
                                     <IconRotate className="w-4 h-4" />
                                 </span>
                             </div>
-                            <span className="text-slate-400 text-xs">Reset (Fists) | Rotate (Palms)</span>
+                            <div className="flex flex-col leading-tight">
+                                <span className="text-xs font-semibold text-slate-500">Reset / Rotate</span>
+                                <span className="text-[10px] text-slate-400">Fists Together / Palms Open</span>
+                            </div>
                         </li>
                     </ul>
                 </div>
