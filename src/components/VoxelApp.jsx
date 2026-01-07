@@ -531,7 +531,7 @@ const VoxelApp = () => {
     return (
         <div className="relative w-screen h-screen overflow-hidden bg-slate-100 font-sans selection:bg-indigo-100">
             {/* UI Container */}
-            <div className="absolute inset-0 pointer-events-none z-50 p-8 flex flex-col justify-between">
+            <div className="absolute inset-0 pointer-events-none z-50 p-4 md:p-8 flex flex-col justify-start gap-4">
 
                 {/* Header Card */}
                 <div className="flex justify-between items-start">
