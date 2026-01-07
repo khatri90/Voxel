@@ -2,21 +2,26 @@ import React, { useEffect, useRef } from 'react';
 import { Hands } from '@mediapipe/hands';
 import { Camera } from '@mediapipe/camera_utils';
 import * as THREE from 'three';
-import { IconBuild, IconErase, IconGrab, IconReset, IconRotate, IconHandRight, IconHandLeft } from './UI/Icons';
-import LoadingScreen from './UI/LoadingScreen';
-
-const PASTEL_PALETTE = [
-    { hex: 0xa5b4fc, str: "#a5b4fc", name: "Indigo" },
-    { hex: 0xfda4af, str: "#fda4af", name: "Rose" },
-    { hex: 0xfcd34d, str: "#fcd34d", name: "Amber" },
-    { hex: 0x6ee7b7, str: "#6ee7b7", name: "Emerald" },
-    { hex: 0x93c5fd, str: "#93c5fd", name: "Blue" },
+const VOXEL_PALETTE = [
+    { hex: 0xa5b4fc, str: "#a5b4fc", name: "Soft Indigo" },
+    { hex: 0xfda4af, str: "#fda4af", name: "Soft Rose" },
+    { hex: 0x6ee7b7, str: "#6ee7b7", name: "Soft Mint" },
+    { hex: 0xfcd34d, str: "#fcd34d", name: "Soft Amber" },
+    { hex: 0x00f3ff, str: "#00f3ff", name: "Cyber Cyan" },
+    { hex: 0xff00ff, str: "#ff00ff", name: "Cyber Neon" },
+    { hex: 0xffea00, str: "#ffea00", name: "Cyber Yellow" },
 ];
 
 const VoxelApp = () => {
     const [isLoading, setIsLoading] = React.useState(true);
-    const [colorIdx, setColorIdx] = React.useState(0);
-    const activeColor = PASTEL_PALETTE[colorIdx];
+    const [colorIdx, _setColorIdx] = React.useState(0);
+    const activeColor = VOXEL_PALETTE[colorIdx];
+
+    // Helper to sync state and ref
+    const setColorIdx = (idx) => {
+        _setColorIdx(idx);
+        stateRef.current.colorIdx = idx;
+    };
 
     const videoRef = useRef(null);
     const bioCanvasRef = useRef(null);
@@ -42,6 +47,7 @@ const VoxelApp = () => {
         isErasing: false, eraseTimer: 0,
         resetTimer: 0, rotateTimer: 0,
         cycleTimer: 0, // For color cycling
+        colorIdx: 0, // CRITICAL: Ref-based color index for closure access
         startPinchPos: null, activeAxis: null,
         sketchKeys: new Set(),
     });
@@ -292,9 +298,10 @@ const VoxelApp = () => {
 
     const createFinalCube = (x, y, z) => {
         const g = new THREE.BoxGeometry(GRID_SIZE * 0.95, GRID_SIZE * 0.95, GRID_SIZE * 0.95);
-        const col = PASTEL_PALETTE[stateRef.current.tempColorIdx ?? colorIdx]; // Use temp color if cycling, else current
+        // Use Ref for color to ensure we get the latest value inside the closure
+        const idx = stateRef.current.colorIdx !== undefined ? stateRef.current.colorIdx : 0;
+        const col = VOXEL_PALETTE[idx];
         const m = new THREE.MeshPhongMaterial({
-            color: 0xffffff, // Tint with texture or keep white base? Let's use the color
             color: col.hex,
             emissive: col.hex,
             emissiveIntensity: 0.2,
@@ -344,10 +351,11 @@ const VoxelApp = () => {
             if (s.cycleTimer < CYCLE_HOLD) {
                 s.cycleTimer += 16;
                 const h = isPeace(rHand) ? rHand : lHand;
-                drawHUDRing(bioCtx, h[9].x * bioCanvas.width, h[9].y * bioCanvas.height, s.cycleTimer / CYCLE_HOLD, activeColor.str);
+                const curCol = VOXEL_PALETTE[stateRef.current.colorIdx || 0];
+                drawHUDRing(bioCtx, h[9].x * bioCanvas.width, h[9].y * bioCanvas.height, s.cycleTimer / CYCLE_HOLD, curCol.str);
                 if (modeRef.current) modeRef.current.innerText = "Cycling Color...";
             } else {
-                const nextIdx = (colorIdx + 1) % PASTEL_PALETTE.length;
+                const nextIdx = ((stateRef.current.colorIdx || 0) + 1) % VOXEL_PALETTE.length;
                 setColorIdx(nextIdx);
                 s.cycleTimer = 0;
             }
@@ -463,7 +471,8 @@ const VoxelApp = () => {
                 if (s.buildTimer < INTENT_HOLD) {
                     s.buildTimer += 16;
                     // Use active cycling color for the build ring!
-                    drawHUDRing(bioCtx, px, py, s.buildTimer / INTENT_HOLD, activeColor.str);
+                    const curCol = VOXEL_PALETTE[stateRef.current.colorIdx || 0];
+                    drawHUDRing(bioCtx, px, py, s.buildTimer / INTENT_HOLD, curCol.str);
                     if (modeRef.current) modeRef.current.innerText = "Syncing Build...";
                 } else {
                     if (!s.isBuilding) {
@@ -525,7 +534,7 @@ const VoxelApp = () => {
                             <div className="flex justify-between items-center text-sm font-medium text-slate-500">
                                 <span>COLOR</span>
                                 <button
-                                    onClick={() => setColorIdx((prev) => (prev + 1) % PASTEL_PALETTE.length)}
+                                    onClick={() => setColorIdx(((stateRef.current.colorIdx || 0) + 1) % VOXEL_PALETTE.length)}
                                     className="flex items-center gap-2 hover:bg-slate-50 px-2 py-0.5 rounded transition-colors"
                                 >
                                     <span className="w-3 h-3 rounded-full shadow-sm" style={{ backgroundColor: activeColor.str }}></span>
