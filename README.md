@@ -435,7 +435,7 @@ Access application at `http://localhost:5173`
 | Pinch (thumb+index) | Build voxels | Right | 500ms |
 | Pinch left + Point right | Erase voxels | Both | 500ms |
 | Fist | Grab & move model | Left | 500ms |
-| Peace sign (✌️) | Cycle color | Either | 500ms |
+| Peace sign | Cycle color | Either | 500ms |
 | Both palms open | Rotate model | Both | 1000ms |
 | Both fists closed | Reset position | Both | 1000ms |
 
