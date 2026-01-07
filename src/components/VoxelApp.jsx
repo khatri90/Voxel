@@ -288,7 +288,7 @@ const VoxelApp = () => {
 
         const mesh = new THREE.Mesh(
             new THREE.BoxGeometry(GRID_SIZE * 0.98, GRID_SIZE * 0.98, GRID_SIZE * 0.98),
-            new THREE.MeshBasicMaterial({ color: 0xa5b4fc, wireframe: true })
+            new THREE.MeshBasicMaterial({ color: 0xffff00, wireframe: true })
         );
         mesh.position.set(x, y, z);
         currentSketchRef.current.add(mesh);
