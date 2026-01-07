@@ -61,10 +61,7 @@ const VoxelApp = () => {
     const INTENT_HOLD = 500;
     const RESET_HOLD = 1000;
     const ROTATE_HOLD = 1000;
-    const RESET_HOLD = 1000;
-    const ROTATE_HOLD = 1000;
     const CYCLE_HOLD = 500; // Reduced to 500ms for faster cycling
-    const PINCH_THRESHOLD = 0.05;
     const PINCH_THRESHOLD = 0.05;
 
     useEffect(() => {
