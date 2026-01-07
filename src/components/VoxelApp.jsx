@@ -338,6 +338,24 @@ const VoxelApp = () => {
             if (hand.label === 'Right') rHand = smoothed['Right'];
         });
 
+        // PEACE SIGN (Color Cycle) - Index & Middle UP, Ring & Pinky DOWN
+        const isPeace = (h) => h && h[8].y < h[6].y && h[12].y < h[10].y && h[16].y > h[14].y && h[20].y > h[18].y;
+        if (isPeace(lHand) || isPeace(rHand)) {
+            if (s.cycleTimer < CYCLE_HOLD) {
+                s.cycleTimer += 16;
+                const h = isPeace(rHand) ? rHand : lHand;
+                drawHUDRing(bioCtx, h[9].x * bioCanvas.width, h[9].y * bioCanvas.height, s.cycleTimer / CYCLE_HOLD, activeColor.str);
+                if (modeRef.current) modeRef.current.innerText = "Cycling Color...";
+            } else {
+                const nextIdx = (colorIdx + 1) % PASTEL_PALETTE.length;
+                setColorIdx(nextIdx);
+                s.cycleTimer = 0;
+            }
+            return; // Stop other gestures while cycling
+        } else {
+            s.cycleTimer = 0;
+        }
+
         // Two-Hand Gestures
         if (lHand && rHand) {
             const lFist = lHand[8].y > lHand[6].y && lHand[12].y > lHand[10].y && lHand[16].y > lHand[14].y;
@@ -345,24 +363,7 @@ const VoxelApp = () => {
             const lPalm = lHand[8].y < lHand[6].y && lHand[12].y < lHand[10].y && lHand[20].y < lHand[18].y;
             const rPalm = rHand[8].y < rHand[6].y && rHand[12].y < rHand[10].y && rHand[20].y < rHand[18].y;
 
-            // PEACE SIGN (Color Cycle) - Index & Middle UP, Ring & Pinky DOWN
-            const isPeace = (h) => h[8].y < h[6].y && h[12].y < h[10].y && h[16].y > h[14].y && h[20].y > h[18].y;
-            if (isPeace(lHand) || isPeace(rHand)) {
-                if (s.cycleTimer < CYCLE_HOLD) {
-                    s.cycleTimer += 16;
-                    // Visualize cycling (maybe a ring around the center or hand)
-                    const h = isPeace(rHand) ? rHand : lHand;
-                    drawHUDRing(bioCtx, h[9].x * bioCanvas.width, h[9].y * bioCanvas.height, s.cycleTimer / CYCLE_HOLD, activeColor.str);
-                    if (modeRef.current) modeRef.current.innerText = "Cycling Color...";
-                } else {
-                    // Trigger Cycle
-                    const nextIdx = (colorIdx + 1) % PASTEL_PALETTE.length;
-                    setColorIdx(nextIdx);
-                    s.cycleTimer = 0; // Reset to allow rapid cycling if held? Or force release. Let's force release or slow pulse.
-                }
-            } else {
-                s.cycleTimer = 0;
-            }
+
 
             // RESET
             if (lFist && rFist) {
