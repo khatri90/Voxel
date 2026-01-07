@@ -18,6 +18,7 @@ const VOXEL_PALETTE = [
 const VoxelApp = () => {
     const [isLoading, setIsLoading] = React.useState(true);
     const [colorIdx, _setColorIdx] = React.useState(0);
+    const [isPaletteOpen, setIsPaletteOpen] = React.useState(false);
     const activeColor = VOXEL_PALETTE[colorIdx];
 
     // Helper to sync state and ref
@@ -534,23 +535,6 @@ const VoxelApp = () => {
                                 <span>SYSTEM STATUS</span>
                                 <span className="text-emerald-500">ONLINE</span>
                             </div>
-                            <div className="flex flex-col gap-1.5 text-sm font-medium text-slate-500">
-                                <div className="flex justify-between items-center">
-                                    <span>PALETTE</span>
-                                    <span style={{ color: activeColor.str }}>{activeColor.name}</span>
-                                </div>
-                                <div className="flex flex-wrap gap-1.5">
-                                    {VOXEL_PALETTE.map((col, idx) => (
-                                        <button
-                                            key={col.name}
-                                            onClick={() => setColorIdx(idx)}
-                                            className={`w-6 h-6 rounded-full shadow-sm border-2 transition-all ${colorIdx === idx ? 'border-indigo-500 scale-110' : 'border-transparent hover:scale-105'}`}
-                                            style={{ backgroundColor: col.str }}
-                                            title={col.name}
-                                        />
-                                    ))}
-                                </div>
-                            </div>
                             <div className="flex justify-between text-sm font-medium text-slate-500">
                                 <span>MODE</span>
                                 <span ref={modeRef} className="text-indigo-500 font-bold">INITIALIZING</span>
@@ -564,7 +548,7 @@ const VoxelApp = () => {
                 </div>
 
                 {/* Gesture Guide Card */}
-                <div className="glass-panel p-6 max-w-sm self-start animate-slide-up">
+                <div className="glass-panel p-6 max-w-sm self-start animate-slide-up pointer-events-auto">
                     <h3 className="font-bold text-slate-700 mb-4 border-b border-slate-200 pb-2">GESTURE GUIDE</h3>
                     <ul className="space-y-3 text-sm text-slate-600">
                         <li className="flex items-center gap-3">
